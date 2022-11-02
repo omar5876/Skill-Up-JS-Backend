@@ -30,7 +30,7 @@ module.exports = {
             });
             if (emailExists) {
                 const httpError = createHttpError(403, 'Email already exists');
-                next(httpError);
+                return next(httpError);
             }
 
             const newUser = { ...body };
@@ -60,7 +60,7 @@ module.exports = {
             const user = await User.findByPk(id);
             if (!user) {
                 const httpError = createHttpError(404, 'User does not exist');
-                next(httpError);
+                return next(httpError);
             }
 
             const newUser = { ...body };
@@ -71,7 +71,6 @@ module.exports = {
             }
             const response = await user.update(newUser);
 
-            console.log(response);
             endpointResponse({
                 res,
                 message: 'User updated successfuly',
@@ -113,7 +112,7 @@ module.exports = {
             const user = await User.findByPk(id);
             if (!user) {
                 const httpError = createHttpError(404, 'User does not exist');
-                next(httpError);
+                return next(httpError);
             }
             user.destroy();
             endpointResponse({
