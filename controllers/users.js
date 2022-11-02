@@ -85,4 +85,26 @@ module.exports = {
             next(httpError);
         }
     }),
+        get: catchAsync(async (req, res, next) => {
+        const { body } = req;
+        const { id } = req.params;
+        try {
+            const user = await User.findByPk(id);.
+             if (!user) {
+                const httpError = createHttpError(404, 'User does not exist');
+                next(httpError);
+            }
+            endpointResponse({
+                res,
+                message: 'Users retrieved successfully',
+                body: response,
+            });
+            }   catch (error) {
+            const httpError = createHttpError(
+              error.statusCode,
+              `['User does not exist] - [index - GET]: ${error.message}`
+            );
+            next(httpError);
+        }   
+      }),
 };
