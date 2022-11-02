@@ -19,14 +19,13 @@ module.exports = (sequelize, DataTypes) => {
       lastName: DataTypes.STRING,
       email: DataTypes.STRING,
       avatar: DataTypes.STRING,
+      password: DataTypes.STRING,
       roleId: DataTypes.INTEGER,
       categoryId: DataTypes.INTEGER,
-      deletedAt: {
-        type: DataTypes.DATE,
-      },
     },
     {
       sequelize,
+      paranoid: true,
       timestamps: true,
       modelName: "User",
     }

@@ -12,9 +12,11 @@ module.exports = {
         type: Sequelize.STRING,
       },
       amount: {
+        allowNull: false,
         type: Sequelize.DECIMAL,
       },
       date: {
+        allowNull: false,
         type: Sequelize.DATE,
       },
       userId: {
@@ -30,6 +32,9 @@ module.exports = {
       },
       updatedAt: {
         allowNull: false,
+        type: Sequelize.DATE,
+      },
+      deletedAt: {
         type: Sequelize.DATE,
       },
     });
