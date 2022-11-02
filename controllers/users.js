@@ -85,26 +85,47 @@ module.exports = {
             next(httpError);
         }
     }),
-    
+
     getById: catchAsync(async (req, res, next) => {
         const { id } = req.params;
         try {
-            const user = await User.findByPk(id);.
-             if (!user) {
+            const user = await User.findByPk(id);
+            if (!user) {
                 const httpError = createHttpError(404, 'User does not exist');
                 return next(httpError);
             }
             endpointResponse({
                 res,
                 message: 'Users retrieved successfully',
-                body: response,
+                body: user,
             });
-            }   catch (error) {
+        } catch (error) {
             const httpError = createHttpError(
-              error.statusCode,
-              `['Error retrieving user] - [index - GET]: ${error.message}`
+                error.statusCode,
+                `['Error retrieving user] - [index - GET]: ${error.message}`
             );
             return next(httpError);
-        }   
-      }),
+        }
+    }),
+    del: catchAsync(async (req, res, next) => {
+        const { id } = req.params;
+        try {
+            const user = await User.findByPk(id);
+            if (!user) {
+                const httpError = createHttpError(404, 'User does not exist');
+                next(httpError);
+            }
+            user.destroy();
+            endpointResponse({
+                res,
+                message: 'User deleted successfuly',
+            });
+        } catch (error) {
+            const httpError = createHttpError(
+                error.statusCode,
+                `[Error deleting user] - [index - DELETE]: ${error.message}`
+            );
+            next(httpError);
+        }
+    }),
 };
