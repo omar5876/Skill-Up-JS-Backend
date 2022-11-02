@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       roleId: DataTypes.INTEGER,
       categoryId: DataTypes.INTEGER,
       deletedAt: {
-        type: DataTypes.STRING,
+        type: DataTypes.DATE,
       },
     },
     {
