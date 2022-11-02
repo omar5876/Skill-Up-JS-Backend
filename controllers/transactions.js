@@ -87,3 +87,32 @@ module.exports = {
       next(httpError)
     }
   }),
+
+  deleteTransaction: catchAsync(async (req, res, next) => {
+    let transactionFound;
+    try {
+        transactionFound = await Transaction.findByPk(req.params.id)
+        if(!transactionFound) return res.status(404).json({status: 404, message: 'Transaction not found'});
+    } catch (error) {
+        const httpError = createHttpError(
+            error.statusCode,
+            `[Error finding Transaction] - [index - DELETE]: ${error.message}`,
+          )
+          next(httpError)
+    }
+    try {
+      const response = await transactionFound.destroy(req.params.id)
+      endpointResponse({
+        res,
+        message: 'Transaction was deleted successfully',
+        body: response,
+      })
+    } catch (error) {
+      const httpError = createHttpError(
+        error.statusCode,
+        `[Error deleting Transaction] - [index - DELETE]: ${error.message}`,
+      )
+      next(httpError)
+    }
+  }),
+}
