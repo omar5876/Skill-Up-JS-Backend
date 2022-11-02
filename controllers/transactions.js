@@ -41,3 +41,21 @@ module.exports = {
       next(httpError)
     }
   }),
+
+  createTransaction: catchAsync(async (req, res, next) => {
+    try {
+      const response = await Transaction.create(req.body)
+      if(!response) return res.status(500).json({status: 500, message: 'Transaction hasn\'t been created'});
+      endpointResponse({
+        res,
+        message: 'Transaction was created successfully',
+        body: response,
+      })
+    } catch (error) {
+      const httpError = createHttpError(
+        error.statusCode,
+        `[Error creating Transaction] - [index - POST]: ${error.message}`,
+      )
+      next(httpError)
+    }
+  }),
