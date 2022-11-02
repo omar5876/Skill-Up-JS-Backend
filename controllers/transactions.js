@@ -22,3 +22,22 @@ module.exports = {
       next(httpError)
     }
   }),
+
+  getById: catchAsync(async (req, res, next) => {
+    const {id} = req.params
+    try {
+      const response = await Transaction.findByPk(id)
+      if(!response) return res.status(404).json({status: 404, message: 'Transaction not found'});
+      endpointResponse({
+        res,
+        message: 'Transaction retrieved successfully',
+        body: response,
+      })
+    } catch (error) {
+      const httpError = createHttpError(
+        error.statusCode,
+        `[Error retrieving Transaction] - [index - GET]: ${error.message}`,
+      )
+      next(httpError)
+    }
+  }),
