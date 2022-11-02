@@ -59,3 +59,31 @@ module.exports = {
       next(httpError)
     }
   }),
+
+  updateTransaction: catchAsync(async (req, res, next) => {
+    let transactionFound;
+    try {
+        transactionFound = await Transaction.findByPk(req.params.id)
+        if(!transactionFound) return res.status(404).json({status: 404, message: 'Transaction not found'});
+    } catch (error) {
+        const httpError = createHttpError(
+            error.statusCode,
+            `[Error finding Transaction] - [index - PUT]: ${error.message}`,
+          )
+          next(httpError)
+    }
+    try {
+      const response = await transactionFound.update(req.body)
+      endpointResponse({
+        res,
+        message: 'Transaction was updated successfully',
+        body: response,
+      })
+    } catch (error) {
+      const httpError = createHttpError(
+        error.statusCode,
+        `[Error updating Transaction] - [index - PUT]: ${error.message}`,
+      )
+      next(httpError)
+    }
+  }),
