@@ -1,11 +1,9 @@
-const express = require('express')
-const {
-   get,
-} = require('../controllers/users')
+const express = require('express');
+const { get, post } = require('../controllers/users');
 
-const router = express.Router()
+const router = express.Router();
 
-router.get('/', get)
+router.get('/', get);
+router.post('/', post);
 
-
-module.exports = router
+module.exports = router;
