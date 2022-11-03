@@ -8,7 +8,7 @@ module.exports = {
   get: catchAsync(async (req, res, next) => {
     try {
       const response = await Transaction.findAll();
-      if(!response.length) return res.status(404).json({status: 404, message: 'There are no transactions'})
+      if(!response.length) return next(createHttpError(404, 'There are no transactions'))
       endpointResponse({
         res,
         message: 'Transactions retrieved successfully',
@@ -27,7 +27,7 @@ module.exports = {
     const {id} = req.params
     try {
       const response = await Transaction.findByPk(id)
-      if(!response) return res.status(404).json({status: 404, message: 'Transaction not found'});
+      if(!response) return next(createHttpError(404, 'Transaction not found'));
       endpointResponse({
         res,
         message: 'Transaction retrieved successfully',
@@ -45,7 +45,7 @@ module.exports = {
   createTransaction: catchAsync(async (req, res, next) => {
     try {
       const response = await Transaction.create(req.body)
-      if(!response) return res.status(500).json({status: 500, message: 'Transaction hasn\'t been created'});
+      if(!response) return next(createHttpError(500, 'Transaction hasn\'t been created'));
       endpointResponse({
         res,
         message: 'Transaction was created successfully',
@@ -64,7 +64,7 @@ module.exports = {
     let transactionFound;
     try {
         transactionFound = await Transaction.findByPk(req.params.id)
-        if(!transactionFound) return res.status(404).json({status: 404, message: 'Transaction not found'});
+        if(!transactionFound) return next(createHttpError(404, 'Transaction not found'));
     } catch (error) {
         const httpError = createHttpError(
             error.statusCode,
@@ -92,7 +92,7 @@ module.exports = {
     let transactionFound;
     try {
         transactionFound = await Transaction.findByPk(req.params.id)
-        if(!transactionFound) return res.status(404).json({status: 404, message: 'Transaction not found'});
+        if(!transactionFound) return next(createHttpError(404, 'Transaction not found'));
     } catch (error) {
         const httpError = createHttpError(
             error.statusCode,
