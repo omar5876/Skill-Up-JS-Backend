@@ -1,29 +1,12 @@
 "use strict";
 
 const users = [
-<<<<<<< HEAD
-  {
-    firstName: "John",
-    lastName: "Doe",
-    password: "demo1",
-    email: "demo1@gmail.com",
-    roleId: 1,
-  },
-  {
-    firstName: "John",
-    lastName: "Doe",
-    password: "demo2",
-    email: "demo2@gmail.com",
-    roleId: 2,
-  },
-=======
     {
         firstName: 'John',
         lastName: 'Doe',
         password: 'demo1',
         email: 'demo1@gmail.com',
         roleId: 1,
-        id: 1,
     },
     {
         firstName: 'John',
@@ -31,7 +14,6 @@ const users = [
         password: 'demo2',
         email: 'demo2@gmail.com',
         roleId: 1,
-        id: 2,
     },
     {
         firstName: 'John',
@@ -39,7 +21,6 @@ const users = [
         password: 'demo3',
         email: 'demo3@gmail.com',
         roleId: 1,
-        id: 3,
     },
     {
         firstName: 'John',
@@ -47,7 +28,6 @@ const users = [
         password: 'demo4',
         email: 'demo4@gmail.com',
         roleId: 1,
-        id: 4,
     },
     {
         firstName: 'John',
@@ -55,7 +35,6 @@ const users = [
         password: 'demo5',
         email: 'demo5@gmail.com',
         roleId: 1,
-        id: 5,
     },
     {
         firstName: 'John',
@@ -63,7 +42,6 @@ const users = [
         password: 'demo6',
         email: 'demo6@gmail.com',
         roleId: 1,
-        id: 6,
     },
     {
         firstName: 'John',
@@ -71,7 +49,6 @@ const users = [
         password: 'demo7',
         email: 'demo7@gmail.com',
         roleId: 1,
-        id: 7,
     },
     {
         firstName: 'John',
@@ -79,7 +56,6 @@ const users = [
         password: 'demo8',
         email: 'demo8@gmail.com',
         roleId: 1,
-        id: 8,
     },
     {
         firstName: 'John',
@@ -87,7 +63,6 @@ const users = [
         password: 'demo9',
         email: 'demo9@gmail.com',
         roleId: 1,
-        id: 9,
     },
     {
         firstName: 'John',
@@ -95,7 +70,6 @@ const users = [
         password: 'demo10',
         email: 'demo10@gmail.com',
         roleId: 1,
-        id: 10,
     },
     {
         firstName: 'John',
@@ -103,7 +77,6 @@ const users = [
         password: 'demo11',
         email: 'demo11@gmail.com',
         roleId: 2,
-        id: 11,
     },
     {
         firstName: 'John',
@@ -111,7 +84,6 @@ const users = [
         password: 'demo12',
         email: 'demo12@gmail.com',
         roleId: 2,
-        id: 12,
     },
     {
         firstName: 'John',
@@ -119,7 +91,6 @@ const users = [
         password: 'demo13',
         email: 'demo13@gmail.com',
         roleId: 2,
-        id: 13,
     },
     {
         firstName: 'John',
@@ -127,7 +98,6 @@ const users = [
         password: 'demo14',
         email: 'demo14@gmail.com',
         roleId: 2,
-        id: 14,
     },
     {
         firstName: 'John',
@@ -135,7 +105,6 @@ const users = [
         password: 'demo15',
         email: 'demo15@gmail.com',
         roleId: 2,
-        id: 15,
     },
     {
         firstName: 'John',
@@ -143,7 +112,6 @@ const users = [
         password: 'demo16',
         email: 'demo16@gmail.com',
         roleId: 2,
-        id: 16,
     },
     {
         firstName: 'John',
@@ -151,7 +119,6 @@ const users = [
         password: 'demo17',
         email: 'demo17@gmail.com',
         roleId: 2,
-        id: 17,
     },
     {
         firstName: 'John',
@@ -159,7 +126,6 @@ const users = [
         password: 'demo18',
         email: 'demo18@gmail.com',
         roleId: 2,
-        id: 18,
     },
     {
         firstName: 'John',
@@ -167,7 +133,6 @@ const users = [
         password: 'demo19',
         email: 'demo19@gmail.com',
         roleId: 2,
-        id: 19,
     },
     {
         firstName: 'John',
@@ -175,9 +140,7 @@ const users = [
         password: 'demo20',
         email: 'demo20@gmail.com',
         roleId: 2,
-        id: 20,
     },
->>>>>>> b4c037dd0c00706cf63af629868e3f44dee2afc9
 ];
 
 module.exports = {
