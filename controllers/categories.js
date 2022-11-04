@@ -44,7 +44,7 @@ module.exports = {
             next(httpError);
         }
     }),
-    
+
     deleteCategory: catchAsync(async (req, res, next) => {
         const { id } = req.params;
         try {
@@ -65,5 +65,35 @@ module.exports = {
             );
             next(httpError);
         }
-      }),
-};
+    }),
+
+    updateCategory: catchAsync(async (req, res, next) => {
+        const { id } = req.params
+        const { name, description } = req.body
+
+        const category = await Category.findByPk(id)
+        if (!Category) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'The category was not found.',
+            })
+        }
+        category.name = name
+        category.description = description
+        await category
+            .save()
+            .then((updatedCategory) => res.status(201).json({
+                ok: true,
+                msg: 'Category updated successfully',
+                result: { category: { ...updatedCategory } },
+            }))
+            .catch((err) => {
+                const httpError = createHttpError(
+                    err.statusCode,
+                    `[Error updating Categories] - [index - PUT]: ${err.message}`,
+                )
+                next(httpError)
+            })
+    }),
+
+}
