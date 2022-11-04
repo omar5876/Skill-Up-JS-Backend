@@ -44,4 +44,26 @@ module.exports = {
             next(httpError);
         }
     }),
+    
+    deleteCategory: catchAsync(async (req, res, next) => {
+        const { id } = req.params;
+        try {
+            const category = await Category.findByPk(id);
+            if (!category) {
+                const httpError = createHttpError(404, 'category does not exist');
+                return next(httpError);
+            }
+            category.destroy();
+            endpointResponse({
+                res,
+                message: 'Category deleted',
+            });
+        } catch (error) {
+            const httpError = createHttpError(
+                error.statusCode,
+                `[Error deleting user] - [index - DELETE]: ${error.message}`
+            );
+            next(httpError);
+        }
+      }),
 };
