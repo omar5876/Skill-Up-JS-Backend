@@ -10,7 +10,7 @@ module.exports = {
                     id: 1,
                 },
                 {
-                    name: 'STANDARD',
+                    name: 'ADMIN',
                     id: 2,
                 },
             ],
