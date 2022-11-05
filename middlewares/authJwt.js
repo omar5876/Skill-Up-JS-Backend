@@ -1,6 +1,5 @@
 const createHttpError = require("http-errors");
 const { decodeToken, verifyToken } = require("../helpers/jwtHelper");
-const { endpointResponse } = require("../helpers/success");
 
 const isAuthenticated = (req, res, next) => {
   let headerAuthorization = req.headers.authorization;
@@ -16,10 +15,7 @@ const isAuthenticated = (req, res, next) => {
   } else {
     let decoded = decodeToken(headerAuthorization);
     if (decoded.decodeDataToken.dataUser) {
-      res.status(200).json({
-        status: 200,
-        message: "successful access",
-      });
+      req.user = decoded;
       next();
     } else {
       const httpError = createHttpError(403, "access denied");
@@ -28,6 +24,6 @@ const isAuthenticated = (req, res, next) => {
   }
 };
 
-const hasAuthenticatedRol = (user) => (req, res, next) => {};
+/* const hasAuthenticatedRol = (user) => (req, res, next) => {}; */
 
-module.exports = { isAuthenticated, hasAuthenticatedRol };
+module.exports = isAuthenticated;
