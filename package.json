@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "nodemon index.js",
-    "test": "mocha ./test/*.js"
+    "test": "cross-env NODE_ENV=test jest --verbose --runInBand"
   },
   "engines": {
     "node": ">=0.14"
@@ -35,6 +35,7 @@
   },
   "devDependencies": {
     "chai": "^4.3.4",
+    "cross-env": "^7.0.3",
     "jest": "27.0.6",
     "mocha": "^9.1.3",
     "prettier": "2.3.2",
