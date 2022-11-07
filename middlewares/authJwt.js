@@ -67,4 +67,5 @@ const hasAuthenticatedRol = (rol) => async (req, res, next) => {
     });
 };
 
-module.exports = { isAuthenticated, hasAuthenticatedRol };
+
+module.exports = {isAuthenticated, hasAuthenticatedRol };
