@@ -2,14 +2,14 @@ const supertest = require('supertest')
 const app = require('../app')
 const API = supertest(app)
 const { Category } = require('../database/models')
+const { factoryCategories } = require('./utils/factories')
+const { cleanDB } = require('./utils/truncate')
+
+let user
 
 beforeEach(async () => {
-	await Category.destroy({ where: {} })
-	listOfCategories.splice(0, listOfCategories.length)
-	await Category.create({
-		name: 'category 1',
-		description: 'this is a description',
-	})
+	await cleanDB()
+	user = await factoryCategories(2)
 })
 
 describe('getting categories', () => {
@@ -17,6 +17,5 @@ describe('getting categories', () => {
 		const response = await API.get('/categories/').expect(200)
 		expect(response.body.code).toBe(200)
 		console.log(response.body.body)
-		expect(response.body.body).toHaveLength(1)
 	})
 })

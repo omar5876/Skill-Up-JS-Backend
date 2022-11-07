@@ -11,6 +11,7 @@
   },
   "scripts": {
     "start": "nodemon index.js",
+    "pretest": "cross-env NODE_ENV=test npx sequelize db:create && cross-env NODE_ENV=test npx sequelize db:migrate",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand"
   },
   "engines": {
@@ -34,6 +35,7 @@
     "sequelize-cli": "6.2.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
     "chai": "^4.3.4",
     "cross-env": "^7.0.3",
     "jest": "27.0.6",
