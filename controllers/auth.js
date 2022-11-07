@@ -10,7 +10,6 @@ module.exports = {
   post: catchAsync(async (req, res, next) => {
     const { email, password } = req.body;
     try {
-      console.log(email, password);
       if (!email || !password) {
         throw new createHttpError(400, 'Email & password required');
       }
@@ -36,6 +35,28 @@ module.exports = {
       const httpError = createHttpError(
         error.statusCode,
         `[Error loging users] - [auth/login - POST]: ${error.message}`,
+      )
+      next(httpError)
+    }
+  }),
+  get: catchAsync(async (req, res, next) => {
+    const { userId } = req.user;
+    try {
+      const user = await User.findByPk(userId);
+
+      if (!user) {
+        throw new createHttpError(400, 'User not found');
+      }
+
+      endpointResponse({
+        res,
+        body: { user },
+      })
+
+    } catch (error) {
+      const httpError = createHttpError(
+        error.statusCode,
+        `[Error retrieving user] - [auth/me - GET]: ${error.message}`,
       )
       next(httpError)
     }
