@@ -24,6 +24,6 @@ const isAuthenticated = (req, res, next) => {
 
 };
 
-const hasAuthenticatedRol = (user) => (req, res, next) => { };
+/* const hasAuthenticatedRol = (user) => (req, res, next) => {}; */
 
-module.exports = { isAuthenticated, hasAuthenticatedRol };
+module.exports = isAuthenticated;
