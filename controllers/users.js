@@ -9,7 +9,7 @@ module.exports = {
   get: catchAsync(async (req, res, next) => {
     try {
       const response = await User.findAll()
-      if(!response.length) return res.status(404).json({status: 404, message: 'There are no users'})
+      if(!response.length) return next(createHttpError(404, 'There are no users'))
       endpointResponse({
         res,
         message: 'Users retrieved successfully',
