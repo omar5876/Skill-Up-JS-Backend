@@ -1,20 +1,32 @@
 const { Category } = require('../../database/models')
 const { faker } = require('@faker-js/faker')
 
-const factoryCategories = (cant) => {
+// populate table categories
+const categoriesFactory = async (cant) => {
 	const categories = []
 	for (let i = 0; i < cant; i++) {
-		categories.push(
-			Category.build({
-				name: faker.company.suffixes(),
-				name: faker.company.bs(),
-			})
-		)
+		categories.push(Category.build(generateRandomCategorie()))
 	}
-	return Promise.all(categories.map((category) => category.save())).then((response) => response)
-	// return categories
+	await populateCategories(categories)
+	const categorieList = await Category.findAll()
+	return categorieList
 }
 
+const generateRandomCategorie = () => {
+	return {
+		name: faker.company.suffixes(),
+		name: faker.company.bs(),
+	}
+}
+
+const populateCategories = (categories) => {
+	return Promise.all(categories.map((category) => category.save())).then((response) => response)
+}
+
+//
+
+// exports
 module.exports = {
-	factoryCategories,
+	categoriesFactory,
+	generateRandomCategorie,
 }
