@@ -7,11 +7,15 @@ module.exports = {
 			[
 				{
 					name: 'OUTCOMES',
-					description: 'shopping',
+					id: 11,
+					createdAt: new Date(),
+					updatedAt: new Date(),
 				},
 				{
 					name: 'INCOMES',
-					description: 'cinema',
+					id: 12,
+					createdAt: new Date(),
+					updatedAt: new Date(),
 				},
 			],
 			{}

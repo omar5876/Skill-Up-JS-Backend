@@ -4,6 +4,7 @@ const { catchAsync } = require('../helpers/catchAsync');
 const { User } = require('../database/models');
 const bcrypt = require('bcryptjs');
 const { createToken } = require('../helpers/jwtHelper');
+const { Role } = require('../database/models');
 
 module.exports = {
 
@@ -14,7 +15,7 @@ module.exports = {
         throw new createHttpError(400, 'Email & password required');
       }
 
-      const user = await User.findOne({ where: { email } });
+      const user = await User.findOne({ where: { email }, include: { model: Role } });
       if (!user) {
         throw new createHttpError(401, 'Email or password invalid');
       }
@@ -23,12 +24,24 @@ module.exports = {
       if (!match) {
         throw new createHttpError(401, 'Email or password invalid');
       }
-
+      console.log(user.toJSON());
       const accessToken = createToken(user);
 
       endpointResponse({
         res,
-        body: { accessToken },
+        body: {
+          user: {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            id: user.id,
+            role: user.Role.name,
+            // role: {
+            //   roleName: user.Role.name,
+            //   roleId: user.Role.id
+            // },
+          },
+          accessToken,
+        },
       })
 
     } catch (error) {
