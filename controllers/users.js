@@ -3,26 +3,28 @@ const { User } = require('../database/models');
 const { endpointResponse } = require('../helpers/success');
 const { catchAsync } = require('../helpers/catchAsync');
 const bcrypt = require('bcryptjs');
+const { uploadImageCloudinary } = require('../helpers/cloudinary');
 
 // example of a controller. First call the service, then build the controller method
 module.exports = {
-  get: catchAsync(async (req, res, next) => {
-    try {
-      const response = await User.findAll()
-      if(!response.length) return next(createHttpError(404, 'There are no users'))
-      endpointResponse({
-        res,
-        message: 'Users retrieved successfully',
-        body: response,
-      })
-    } catch (error) {
-      const httpError = createHttpError(
-        error.statusCode,
-        `[Error retrieving users] - [index - GET]: ${error.message}`,
-      )
-      next(httpError)
-    }
-  }),
+    get: catchAsync(async (req, res, next) => {
+        try {
+            const response = await User.findAll();
+            if (!response.length)
+                return next(createHttpError(404, 'There are no users'));
+            endpointResponse({
+                res,
+                message: 'Users retrieved successfully',
+                body: response,
+            });
+        } catch (error) {
+            const httpError = createHttpError(
+                error.statusCode,
+                `[Error retrieving users] - [index - GET]: ${error.message}`
+            );
+            next(httpError);
+        }
+    }),
     post: catchAsync(async (req, res, next) => {
         const { body } = req;
         try {
@@ -128,5 +130,21 @@ module.exports = {
             next(httpError);
         }
     }),
+    uploadImage: catchAsync(async (req, res, next) => {
+        const { userId } = req.user;
+        console.log(req.user);
+        try {
+            const user = await User.findByPk(userId);
+            const { mimetype, path } = req.file;
+            const { secure_url } = await uploadImageCloudinary(path, mimetype);
+            await user.update({ avatar: secure_url });
+            endpointResponse({ res, message: 'Avatar updated successfuly' });
+        } catch (error) {
+            const httpError = createHttpError(
+                error.statusCode,
+                `[Error uploading image] - [index - POST]: ${error}`
+            );
+            next(httpError);
+        }
+    }),
 };
-
