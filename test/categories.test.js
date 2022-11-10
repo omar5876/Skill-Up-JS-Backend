@@ -8,7 +8,8 @@ let categoriesList
 
 beforeEach(async () => {
 	await cleanDB()
-	categoriesList = await factory.categoriesFactory(2)
+	const dbResponse = await factory.categoriesFactory(2)
+	categoriesList = dbResponse.map((elem) => elem.dataValues)
 })
 
 describe('getting categories', () => {
@@ -62,17 +63,45 @@ describe('adding category', () => {
 		const responseTwo = await API.post('/categories/').send(categorie).expect(201)
 		const totalCategoriesResponse = await API.get('/categories/').expect(200)
 
-		expect(responseOne.boby.body.id).not().toBe(responseTwo.body.boby.id)
-		expect(totalCategoriesResponse.body.boby).toHaveLength(categoriesList.length + 2)
+		expect(responseOne.body.body.id).not.toBe(responseTwo.body.body.id)
+		expect(totalCategoriesResponse.body.body).toHaveLength(categoriesList.length + 2)
 	})
 })
 
 describe('editing category', () => {
-	test('when try to edit a new valid category, is update', async () => {})
+	let categoryEdited
 
-	test('when try to edit an invalid category, return an error', async () => {})
+	beforeEach(() => {
+		categoryEdited = {
+			...categoriesList[0],
+			description: `${categoriesList[0].description} edited`,
+		}
+	})
 
-	test('when try to edit a category with an invalid id, return an error', async () => {})
+	test('when try to edit a new valid category, is update', async () => {
+		const response = await API.put(`/categories/${categoryEdited.id}`)
+			.send(categoryEdited)
+			.expect(200)
+		expect(response.body.boby.description).toBe(categoryEdited.description)
+	})
+
+	test('when a category is edited the size dont change', async () => {
+		await API.put(`/categories/${categoryEdited.id}`).send(categoryEdited).expect(200)
+		const response = await API.get('/categories/').expect(200)
+		expect(response.body.boby).toHaveLength(categoriesList.length)
+	})
+
+	test('when try to edit an invalid category, return an error', async () => {
+		const response = await API.put('/categories/-255').send(categoryEdited).expect(404)
+		expect(response.type).toBe('text/html')
+	})
+
+	test('when try to edit a category with an invalid id, return an error', async () => {
+		const response = await API.put(`/categories/${categoryEdited.name}`)
+			.send(categoryEdited)
+			.expect(404)
+		expect(response.type).toBe('text/html')
+	})
 })
 
 describe('deleting category', () => {
