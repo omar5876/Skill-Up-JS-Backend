@@ -6,7 +6,15 @@ const logger = require('morgan');
 const cors = require('cors');
 const multer = require('multer');
 const { v2: cloudinary } = require('cloudinary');
+var fs = require('fs');
 require('dotenv').config();
+
+//Create temp folder
+var dir = './temp';
+
+if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+}
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
