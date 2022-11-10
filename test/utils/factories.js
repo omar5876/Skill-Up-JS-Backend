@@ -3,6 +3,9 @@ const { faker } = require('@faker-js/faker')
 require('dotenv').config()
 const bcrypt = require('bcryptjs')
 
+// role normal id
+let normalID
+
 // populate table categories
 const categoriesFactory = async (cant) => {
 	const categories = []
@@ -41,13 +44,15 @@ const configUserToSave = (user) => {
 	return User.build(userToSave)
 }
 
-const generateRandomUser = (roleId) => {
-	return {
+const generateRandomUser = (roleId = normalID) => {
+	const user = {
 		firstName: faker.name.firstName(),
 		lastName: faker.name.lastName(),
 		password: faker.internet.password(),
-		roleId,
+		email: faker.internet.email(),
 	}
+	if (roleId) user.roleId = roleId
+	return user
 }
 
 const populateUser = (users) => {
@@ -57,6 +62,7 @@ const populateUser = (users) => {
 const usersFactory = async (cant) => {
 	// insert roles in DB
 	const roles = await populateRoles()
+	normalID = roles[1].dataValues.id
 
 	// create random Users
 	const users = []
