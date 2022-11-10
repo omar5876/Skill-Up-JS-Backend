@@ -105,7 +105,19 @@ describe('editing category', () => {
 })
 
 describe('deleting category', () => {
-	test('when try to delete an existing category, is deleted', async () => {})
+	test('when try to delete an existing category, is deleted', async () => {
+		const response = await API.delete(`/categories/${categoriesList[0].id}`).expect(200)
+		expect(response.body.message).toBe('Category deleted')
+	})
 
-	test('when try to delete a non-existent category, receive an error', async () => {})
+	test('when a category is deleted the size of the categories is reduced', async () => {
+		await API.delete(`/categories/${categoriesList[0].id}`).expect(200)
+		const response = await API.get('/categories/').expect(200)
+		expect(response.body.body).toHaveLength(categoriesList.length - 1)
+	})
+
+	test('when try to delete a non-existent category, receive an error', async () => {
+		const response = await API.delete('/categories/no_valid_id').expect(404)
+		expect(response.type).toBe('text/html')
+	})
 })

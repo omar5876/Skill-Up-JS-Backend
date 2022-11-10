@@ -102,7 +102,7 @@ module.exports = {
 		const { id } = req.params
 		try {
 			const response = await Category.findByPk(id)
-			if (!response) return res.status(404).json({ status: 404, message: 'Category not found' })
+			if (!response) return next(createHttpError(404, 'There are no users'))
 			endpointResponse({
 				res,
 				message: 'Category retrieved successfully',
