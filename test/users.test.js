@@ -42,7 +42,6 @@ describe('get users', () => {
 describe('creating users', () => {
 	test('An user is created when the send data is valid', async () => {
 		const user = generateRandomUser()
-		console.log(user)
 		await API.post('/users/').send(user).expect(201)
 		const allUsers = await API.get('/users').expect(200)
 		expect(allUsers.body.body).toHaveLength(users.length + 1)
@@ -51,14 +50,12 @@ describe('creating users', () => {
 	test('return an error when send missing field data', async () => {
 		let user = generateRandomUser()
 		user = { ...user, email: '' }
-		console.log(user)
 		const response = await API.post('/users/').send(user).expect(400)
 		expect(response.type).toBe('text/html')
 	})
 
 	test('When try to add an registed email, return an error', async () => {
 		const user = generateRandomUser()
-		console.log(user)
 		await API.post('/users/').send(user).expect(201)
 		const response = await API.post('/users/').send(user).expect(403)
 		expect(response.type).toBe('text/html')
@@ -70,5 +67,150 @@ describe('creating users', () => {
 		expect(response.body.body.firstName).toBe(user.firstName)
 		expect(response.body.body.lastName).toBe(user.lastName)
 		expect(response.body.body.email).toBe(user.email)
+	})
+})
+
+describe('edit an user', () => {
+	let user
+	let accessToken
+	let userToEdit
+
+	beforeEach(async () => {
+		// create an user
+		user = generateRandomUser('admin')
+		await API.post('/users').send(user).expect(201)
+
+		// login an user
+		const logingData = await API.post('/auth/login').send(user).expect(200)
+		accessToken = logingData.body.body.accessToken
+
+		userToEdit = {
+			...users[0].dataValues,
+			firstName: `${users[0].dataValues.firstName} Pedro`,
+			lastName: `${users[0].dataValues.lastName} Peterson`,
+			email: `peter_${users[0].dataValues.email}`,
+		}
+	})
+
+	test('when im logged as admin can to edit an existing user', async () => {
+		const response = await API.put(`/users/${userToEdit.id}`)
+			.set('Authorization', `Bearer ${accessToken}`)
+			.send(userToEdit)
+			.expect(200)
+
+		expect(response.body.body.id).toBe(userToEdit.id)
+		expect(response.body.body.firstName).toBe(userToEdit.firstName)
+		expect(response.body.body.lastName).toBe(userToEdit.lastName)
+		expect(response.body.body.email).toBe(userToEdit.email)
+	})
+
+	test('when im not admin and try to edit an user receive an error', async () => {
+		const userEditor = generateRandomUser('normal')
+		await API.post('/users').send(userEditor).expect(201)
+		const loginResponse = await API.post('/auth/login').send(userEditor).expect(200)
+		const token = loginResponse.body.body.accessToken
+
+		const responseError = await API.put(`/users/${userToEdit.id}`)
+			.set('Authorization', `Bearer ${token}`)
+			.send(userToEdit)
+			.expect(403)
+
+		expect(responseError.type).toBe('text/html')
+	})
+
+	test('when im logged and try to edit a non-existent user get an error', async () => {
+		const responseError = await API.put(`/users/${userToEdit.lastName}`)
+			.set('Authorization', `Bearer ${accessToken}`)
+			.send(userToEdit)
+			.expect(404)
+
+		expect(responseError.type).toBe('text/html')
+	})
+
+	test('when im unlogged and try to edit get an error', async () => {
+		const responseError = await API.put(`/users/${userToEdit.id}`).send(userToEdit).expect(403)
+
+		expect(responseError.type).toBe('text/html')
+	})
+
+	test('when i edited an user the size of the response of all dont change', async () => {
+		const beforeUpdate = await API.get('/users').expect(200)
+
+		await API.put(`/users/${userToEdit.id}`)
+			.set('Authorization', `Bearer ${accessToken}`)
+			.send(userToEdit)
+			.expect(200)
+
+		const afterUpdate = await API.get('/users').expect(200)
+		expect(afterUpdate.body.body).toHaveLength(beforeUpdate.body.body.length)
+	})
+})
+
+describe('delete an user', () => {
+	let user
+	let accessToken
+	let userToDelete
+
+	beforeEach(async () => {
+		// create an user
+		user = generateRandomUser('admin')
+		await API.post('/users').send(user).expect(201)
+
+		// login an user
+		const logingData = await API.post('/auth/login').send(user).expect(200)
+		accessToken = logingData.body.body.accessToken
+
+		userToDelete = { ...users[0].dataValues }
+	})
+
+	test('when im logged as admin can to delete an existing user', async () => {
+		await API.delete(`/users/${userToDelete.id}`)
+			.set('Authorization', `Bearer ${accessToken}`)
+			.send(userToDelete)
+			.expect(200)
+		await API.get(`/users/${userToDelete.id}`).expect(404)
+	})
+
+	test('when im not admin and try to delete an user receive an error', async () => {
+		const userEditor = generateRandomUser('normal')
+		await API.post('/users').send(userEditor).expect(201)
+		const loginResponse = await API.post('/auth/login').send(userEditor).expect(200)
+		const token = loginResponse.body.body.accessToken
+
+		const responseError = await API.delete(`/users/${userToDelete.id}`)
+			.set('Authorization', `Bearer ${token}`)
+			.send(userToDelete)
+			.expect(403)
+
+		expect(responseError.type).toBe('text/html')
+	})
+
+	test('when im logged and try to delete a non-existent user get an error', async () => {
+		const responseError = await API.delete(`/users/${userToDelete.lastName}`)
+			.set('Authorization', `Bearer ${accessToken}`)
+			.send(userToDelete)
+			.expect(404)
+
+		expect(responseError.type).toBe('text/html')
+	})
+
+	test('when im unlogged and try to delete, get an error', async () => {
+		const responseError = await API.delete(`/users/${userToDelete.id}`)
+			.send(userToDelete)
+			.expect(403)
+
+		expect(responseError.type).toBe('text/html')
+	})
+
+	test('when i edited an user the size of the response of all users is reduced', async () => {
+		const beforeUpdate = await API.get('/users').expect(200)
+
+		await API.delete(`/users/${userToDelete.id}`)
+			.set('Authorization', `Bearer ${accessToken}`)
+			.send(userToDelete)
+			.expect(200)
+
+		const afterUpdate = await API.get('/users').expect(200)
+		expect(afterUpdate.body.body).toHaveLength(beforeUpdate.body.body.length - 1)
 	})
 })

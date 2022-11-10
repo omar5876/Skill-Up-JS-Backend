@@ -4,7 +4,7 @@ require('dotenv').config()
 const bcrypt = require('bcryptjs')
 
 // role normal id
-let normalID
+let adminID
 
 // populate table categories
 const categoriesFactory = async (cant) => {
@@ -44,14 +44,14 @@ const configUserToSave = (user) => {
 	return User.build(userToSave)
 }
 
-const generateRandomUser = (roleId = normalID) => {
+const generateRandomUser = (typeRole = 'normal') => {
 	const user = {
 		firstName: faker.name.firstName(),
 		lastName: faker.name.lastName(),
 		password: faker.internet.password(),
 		email: faker.internet.email(),
 	}
-	if (roleId) user.roleId = roleId
+	user.roleId = typeRole === 'admin' ? adminID : adminID + 1
 	return user
 }
 
@@ -62,11 +62,11 @@ const populateUser = (users) => {
 const usersFactory = async (cant) => {
 	// insert roles in DB
 	const roles = await populateRoles()
-	normalID = roles[1].dataValues.id
+	adminID = roles[0].dataValues.id
 
 	// create random Users
 	const users = []
-	for (let i = 0; i < cant; i++) users.push(generateRandomUser(roles[1].dataValues.id))
+	for (let i = 0; i < cant; i++) users.push(generateRandomUser('normal'))
 	const usersToSave = users.map((user) => configUserToSave(user))
 
 	// insert in DB
