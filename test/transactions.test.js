@@ -21,3 +21,15 @@ describe('creating a transaction', () => {
 	test('when post an invalid transaction receive an error')
 	test('when post a transaction with missing fields receive an error')
 })
+
+describe('editing transactions', () => {
+	test('when existing a transaction and send correct data, is edited')
+	test('when existing a transaction and send missing data, receive an error')
+	test('when the transaction non-existent, receive an error')
+})
+
+describe('deleting transactions', () => {
+	test('when existing a transaction, is deleted')
+	test('when existing a transaction the size of the transactions table is reduced')
+	test('when the transaction non-existent, receive an error')
+})
