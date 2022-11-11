@@ -4,61 +4,108 @@ const { catchAsync } = require('../helpers/catchAsync');
 const { User } = require('../database/models');
 const bcrypt = require('bcryptjs');
 const { createToken } = require('../helpers/jwtHelper');
+const { Role } = require('../database/models');
 
 module.exports = {
+    post: catchAsync(async (req, res, next) => {
+        const { email, password } = req.body;
+        try {
+            if (!email || !password) {
+                throw new createHttpError(400, 'Email & password required');
+            }
 
-  post: catchAsync(async (req, res, next) => {
-    const { email, password } = req.body;
-    try {
-      if (!email || !password) {
-        throw new createHttpError(400, 'Email & password required');
-      }
+            const user = await User.findOne({
+                where: { email },
+                include: { model: Role },
+            });
+            if (!user) {
+                throw new createHttpError(401, 'Email or password invalid');
+            }
 
-      const user = await User.findOne({ where: { email } });
-      if (!user) {
-        throw new createHttpError(401, 'Email or password invalid');
-      }
+            const match = bcrypt.compareSync(password, user.password);
+            if (!match) {
+                throw new createHttpError(401, 'Email or password invalid');
+            }
+            console.log(user.toJSON());
+            const accessToken = createToken(user);
 
-      const match = bcrypt.compareSync(password, user.password);
-      if (!match) {
-        throw new createHttpError(401, 'Email or password invalid');
-      }
+            endpointResponse({
+                res,
+                body: {
+                    user: {
+                        firstName: user.firstName,
+                        lastName: user.lastName,
+                        id: user.id,
+                        role: user.Role.name,
+                        // role: {
+                        //   roleName: user.Role.name,
+                        //   roleId: user.Role.id
+                        // },
+                    },
+                    accessToken,
+                },
+            });
+        } catch (error) {
+            const httpError = createHttpError(
+                error.statusCode,
+                `[Error loging users] - [auth/login - POST]: ${error.message}`
+            );
+            next(httpError);
+        }
+    }),
+    get: catchAsync(async (req, res, next) => {
+        const { userId } = req.user;
+        try {
+            const user = await User.findByPk(userId);
 
-      const accessToken = createToken(user);
+            if (!user) {
+                throw new createHttpError(400, 'User not found');
+            }
 
-      endpointResponse({
-        res,
-        body: { accessToken },
-      })
+            endpointResponse({
+                res,
+                body: { user },
+            });
+        } catch (error) {
+            const httpError = createHttpError(
+                error.statusCode,
+                `[Error retrieving user] - [auth/me - GET]: ${error.message}`
+            );
+            next(httpError);
+        }
+    }),
+    renew: catchAsync(async (req, res, next) => {
+        const { userId } = req.user;
 
-    } catch (error) {
-      const httpError = createHttpError(
-        error.statusCode,
-        `[Error loging users] - [auth/login - POST]: ${error.message}`,
-      )
-      next(httpError)
-    }
-  }),
-  get: catchAsync(async (req, res, next) => {
-    const { userId } = req.user;
-    try {
-      const user = await User.findByPk(userId);
+        const user = await User.findByPk(userId, { include: { model: Role } });
 
-      if (!user) {
-        throw new createHttpError(400, 'User not found');
-      }
+        console.log(req.user);
 
-      endpointResponse({
-        res,
-        body: { user },
-      })
+        try {
+            const accessToken = createToken(user);
 
-    } catch (error) {
-      const httpError = createHttpError(
-        error.statusCode,
-        `[Error retrieving user] - [auth/me - GET]: ${error.message}`,
-      )
-      next(httpError)
-    }
-  }),
+            endpointResponse({
+                res,
+                body: {
+                    user: {
+                        firstName: user.firstName,
+                        lastName: user.lastName,
+                        id: user.id,
+                        role: user.Role.name,
+                        // role: {
+                        //   roleName: user.Role.name,
+                        //   roleId: user.Role.id
+                        // },
+                    },
+                    accessToken,
+                },
+            });
+        } catch (error) {
+            const httpError = createHttpError(
+                error.statusCode,
+                `[Error loging users] - [auth/login - POST]: ${error.message}`
+            );
+            next(httpError);
+        }
+    }),
 };
