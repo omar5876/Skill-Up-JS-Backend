@@ -1,12 +1,12 @@
-const { Category, User, Role } = require('../../database/models')
+const { Category, User, Role, Transaction } = require('../../database/models')
 const { faker } = require('@faker-js/faker')
 require('dotenv').config()
 const bcrypt = require('bcryptjs')
 
-// role normal id
+// role admin id
 let adminID
 
-// populate table categories
+// ----- populate table categories -----------------------------------------------------------------
 const categoriesFactory = async (cant) => {
 	const categories = []
 	for (let i = 0; i < cant; i++) {
@@ -28,7 +28,7 @@ const populateCategories = (categories) => {
 	return Promise.all(categories.map((category) => category.save())).then((response) => response)
 }
 
-// Roles
+// ---- Roles --------------------------------------------------------------------------------------
 
 const populateRoles = () => {
 	const roles = [{ name: 'admin' }, { name: 'normal' }]
@@ -37,7 +37,7 @@ const populateRoles = () => {
 		.then((response) => response)
 }
 
-// populate table users
+// ---- populate table users -----------------------------------------------------------------------
 const configUserToSave = (user) => {
 	const hashPassword = bcrypt.hashSync(user.password, 10)
 	const userToSave = { ...user, password: hashPassword }
@@ -74,10 +74,45 @@ const usersFactory = async (cant) => {
 	return await User.findAll()
 }
 
-// exports
+// ---- populate table transactions ----------------------------------------------------------------
+let genericCategoryId
+let genericUserId
+
+const generateRandomTransaction = (userId = genericUserId, categoryId = genericCategoryId) => {
+	return {
+		amount: faker.finance.amount(),
+		date: faker.datatype.datetime(),
+		userId,
+		categoryId,
+	}
+}
+
+const populateTransactions = (transactions) => {
+	const transactionsModels = transactions.map((elem) => Transaction.build(elem))
+	return Promise.all(transactionsModels.map((elem) => elem.save()))
+}
+
+const transctionsFactory = async (cant) => {
+	const categories = await categoriesFactory(1)
+	const users = await usersFactory(1)
+	genericCategoryId = categories[0].dataValues.id
+	genericUserId = users[0].dataValues.id
+
+	const transactions = []
+	for (let i = 0; i < cant; i++) {
+		transactions.push(generateRandomTransaction(genericUserId, genericCategoryId))
+	}
+	await populateTransactions(transactions)
+	const transactionsResponse = await Transaction.findAll()
+	return transactionsResponse.map((elem) => elem.dataValues)
+}
+
+// ---- exports ------------------------------------------------------------------------------------
 module.exports = {
 	categoriesFactory,
-	generateRandomCategorie,
 	usersFactory,
+	transctionsFactory,
+	generateRandomCategorie,
 	generateRandomUser,
+	generateRandomTransaction,
 }
