@@ -33,10 +33,35 @@ describe('get transaction', () => {
 })
 
 describe('creating a transaction', () => {
-	test('when post a valid transaction, is added to the table', async () => {})
-	test('when post a valid transaction the size of the transactions table is changed', async () => {})
-	test('when post an invalid transaction receive an error', async () => {})
-	test('when post a transaction with missing fields receive an error', async () => {})
+	test('when post a valid transaction, is added to the table', async () => {
+		const transaction = factory.generateRandomTransaction()
+		console.log(transaction)
+		const response = await API.post('/transactions/').send(transaction).expect(201)
+		expect(response.body.body.amount).toBe(transaction.amount)
+	})
+	test('when post a valid transaction the size of the transactions table is changed', async () => {
+		const transaction = factory.generateRandomTransaction()
+		console.log(transaction)
+		await API.post('/transactions/').send(transaction).expect(201)
+		const response = await API.get('/transactions/').expect(200)
+		expect(response.body.body).toHaveLength(transactions.length + 1)
+	})
+
+	// ~~~~ should to check if the fields user, category, amount and date are available ~~~~
+	test('when post an invalid transaction receive an error', async () => {
+		const transaction = { description: 'a description' }
+		console.log(transaction)
+		const response = await API.post('/transactions/').send(transaction).expect(500)
+		expect(response.type).toBe('text/html')
+	})
+
+	test('when post a transaction with missing fields receive an error', async () => {
+		let transaction = factory.generateRandomTransaction()
+		transaction = { ...transaction, amount: undefined }
+		console.log(transaction)
+		const response = await API.post('/transactions/').send(transaction).expect(500)
+		expect(response.type).toBe('text/html')
+	})
 })
 
 describe('editing transactions', () => {
