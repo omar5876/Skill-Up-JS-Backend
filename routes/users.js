@@ -9,16 +9,16 @@ const {
     uploadImage,
 } = require('../controllers/users');
 const {
-    isAuthenticated,
-    hasAuthenticatedRol,
-} = require('../middlewares/authJwt');
+  isAuthenticated,
+hasOwnershipRol,
+} = require("../middlewares/authJwt");
 const router = express.Router();
 
-router.get('/', get);
-router.get('/:id', getById);
-router.post('/', post);
+router.get("/",isAuthenticated,hasOwnershipRol, get);
+router.get("/:id",isAuthenticated,hasOwnershipRol, getById);
+router.post("/", post);
 router.post('/upload', isAuthenticated, uploadImage);
-router.put('/:id', isAuthenticated, hasAuthenticatedRol(['admin']), put);
-router.delete('/:id', isAuthenticated, hasAuthenticatedRol(['admin']), del);
+router.put("/:id", isAuthenticated,hasOwnershipRol, put);
+router.delete("/:id", isAuthenticated, hasOwnershipRol, del);
 
 module.exports = router;

@@ -25,47 +25,35 @@ const isAuthenticated = (req, res, next) => {
   next();
 };
 
-const hasAuthenticatedRol = (rol) => async (req, res, next) => {
+ const hasOwnershipRol= async (req, res, next) => {
   const headerAuthorization =
     req.headers.authorization || req.headers.Authorization;
 
   const decoded = decodeToken(headerAuthorization);
-  let userIdToken = JSON.stringify(decoded.decodeDataToken.data.userId);
-
-  await User.findOne({
-    where: { id: userIdToken },
-    attributes: {
-      exclude: [
-        "avatar",
-        "firstName",
-        "lastName",
-        "password",
-        "email",
-        "createdAt",
-        "updatedAt",
-        "deletedAt",
-        "roleId",
-      ],
-    },
-    include: {
-      model: Role,
-      attributes: {
-        exclude: ["description", "createdAt", "updatedAt", "id"],
-      },
-    },
-  })
-    .then((data) => {
-      if (![].concat(rol[0].toUpperCase()).includes(data.Role.name)) {
-        const httpError = createHttpError(403, "does not have permissions");
+  const userIdToken = JSON.stringify(decoded.decodeDataToken.data.userId);
+  const userCurrent=req.params.id
+   
+   const user = await User.findOne({
+     where: { id: userIdToken },
+     attributes: ["id"],
+     include: {
+       model: Role,
+       attributes: ["name"]
+     },
+   }); 
+   
+   if (userCurrent != userIdToken) {      
+      if (user.Role.name === "ADMIN") {       
+        return next();
+     }
+      else {
+         const httpError = createHttpError(403, "you do not have admin permissions");
         next(httpError);
-      }
-      next();
-    })
-    .catch((err) => {
-      const httpError = createHttpError(404, "user does not match token");
-      next(httpError);
-    });
+     }    
+   }
+   next(); 
 };
 
 
-module.exports = {isAuthenticated, hasAuthenticatedRol };
+
+module.exports = {isAuthenticated ,hasOwnershipRol};
