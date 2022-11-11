@@ -14,3 +14,10 @@ decribe('get transaction', () => {
 	test('when ask for one existing transaction receive that transaction', async () => {})
 	test('when ask for one non-existent transaction receive that error', async () => {})
 })
+
+describe('creating a transaction', () => {
+	test('when post a valid transaction, is added to the table')
+	test('when post a valid transaction the size of the transactions table is changed')
+	test('when post an invalid transaction receive an error')
+	test('when post a transaction with missing fields receive an error')
+})
