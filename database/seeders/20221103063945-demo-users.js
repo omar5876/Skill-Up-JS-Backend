@@ -1,11 +1,19 @@
 'use strict';
 
+const bcrypt = require('bcryptjs');
+
+const passwordHash = (password) => {
+    const salt = bcrypt.genSaltSync();
+    const hash = bcrypt.hashSync(password, salt);
+    return hash;
+};
+
 const users = [
     {
         firstName: 'John',
         lastName: 'Doe',
-        password: 'demo1',
-        email: 'demo1@gmail.com',
+        password: passwordHash('demoregular1'),
+        email: 'demoregular1@gmail.com',
         roleId: 11,
         id: 11,
         createdAt: new Date(),
@@ -14,8 +22,8 @@ const users = [
     {
         firstName: 'John',
         lastName: 'Doe',
-        password: 'demo2',
-        email: 'demo2@gmail.com',
+        password: passwordHash('demoregular2'),
+        email: 'demoregular2@gmail.com',
         roleId: 11,
         id: 12,
         createdAt: new Date(),
@@ -24,8 +32,8 @@ const users = [
     {
         firstName: 'John',
         lastName: 'Doe',
-        password: 'demo3',
-        email: 'demo3@gmail.com',
+        password: passwordHash('demoregular3'),
+        email: 'demoregular3@gmail.com',
         roleId: 11,
         id: 13,
         createdAt: new Date(),
@@ -34,8 +42,8 @@ const users = [
     {
         firstName: 'John',
         lastName: 'Doe',
-        password: 'demo4',
-        email: 'demo4@gmail.com',
+        password: passwordHash('demoregular4'),
+        email: 'demoregular4@gmail.com',
         roleId: 11,
         id: 14,
         createdAt: new Date(),
@@ -44,8 +52,8 @@ const users = [
     {
         firstName: 'John',
         lastName: 'Doe',
-        password: 'demo5',
-        email: 'demo5@gmail.com',
+        password: passwordHash('demoregular5'),
+        email: 'demoregular5@gmail.com',
         roleId: 11,
         id: 15,
         createdAt: new Date(),
@@ -54,8 +62,8 @@ const users = [
     {
         firstName: 'John',
         lastName: 'Doe',
-        password: 'demo6',
-        email: 'demo6@gmail.com',
+        password: passwordHash('demoregular6'),
+        email: 'demoregular6@gmail.com',
         roleId: 11,
         id: 16,
         createdAt: new Date(),
@@ -64,8 +72,8 @@ const users = [
     {
         firstName: 'John',
         lastName: 'Doe',
-        password: 'demo7',
-        email: 'demo7@gmail.com',
+        password: passwordHash('demoregular7'),
+        email: 'demoregular7@gmail.com',
         roleId: 11,
         id: 17,
         createdAt: new Date(),
@@ -74,8 +82,8 @@ const users = [
     {
         firstName: 'John',
         lastName: 'Doe',
-        password: 'demo8',
-        email: 'demo8@gmail.com',
+        password: passwordHash('demoregular8'),
+        email: 'demoregular8@gmail.com',
         roleId: 11,
         id: 18,
         createdAt: new Date(),
@@ -84,8 +92,8 @@ const users = [
     {
         firstName: 'John',
         lastName: 'Doe',
-        password: 'demo9',
-        email: 'demo9@gmail.com',
+        password: passwordHash('demoregular9'),
+        email: 'demoregular9@gmail.com',
         roleId: 11,
         id: 19,
         createdAt: new Date(),
@@ -94,8 +102,8 @@ const users = [
     {
         firstName: 'John',
         lastName: 'Doe',
-        password: 'demo10',
-        email: 'demo10@gmail.com',
+        password: passwordHash('demoregular10'),
+        email: 'demoregular10@gmail.com',
         roleId: 11,
         id: 110,
         createdAt: new Date(),
@@ -104,8 +112,8 @@ const users = [
     {
         firstName: 'John',
         lastName: 'Doe',
-        password: 'demo11',
-        email: 'demo11@gmail.com',
+        password: passwordHash('demoadmin1'),
+        email: 'demoadmin1@gmail.com',
         roleId: 12,
         id: 111,
         createdAt: new Date(),
@@ -114,8 +122,8 @@ const users = [
     {
         firstName: 'John',
         lastName: 'Doe',
-        password: 'demo12',
-        email: 'demo12@gmail.com',
+        password: passwordHash('demoadmin2'),
+        email: 'demoadmin2@gmail.com',
         roleId: 12,
         id: 112,
         createdAt: new Date(),
@@ -124,8 +132,8 @@ const users = [
     {
         firstName: 'John',
         lastName: 'Doe',
-        password: 'demo13',
-        email: 'demo13@gmail.com',
+        password: passwordHash('demoadmin3'),
+        email: 'demoadmin3@gmail.com',
         roleId: 12,
         id: 113,
         createdAt: new Date(),
@@ -134,8 +142,8 @@ const users = [
     {
         firstName: 'John',
         lastName: 'Doe',
-        password: 'demo14',
-        email: 'demo14@gmail.com',
+        password: passwordHash('demoadmin4'),
+        email: 'demoadmin4@gmail.com',
         roleId: 12,
         id: 114,
         createdAt: new Date(),
@@ -144,8 +152,8 @@ const users = [
     {
         firstName: 'John',
         lastName: 'Doe',
-        password: 'demo15',
-        email: 'demo15@gmail.com',
+        password: passwordHash('demoadmin5'),
+        email: 'demoadmin5@gmail.com',
         roleId: 12,
         id: 115,
         createdAt: new Date(),
@@ -154,8 +162,8 @@ const users = [
     {
         firstName: 'John',
         lastName: 'Doe',
-        password: 'demo16',
-        email: 'demo16@gmail.com',
+        password: passwordHash('demoadmin6'),
+        email: 'demoadmin6@gmail.com',
         roleId: 12,
         id: 116,
         createdAt: new Date(),
@@ -164,8 +172,8 @@ const users = [
     {
         firstName: 'John',
         lastName: 'Doe',
-        password: 'demo17',
-        email: 'demo17@gmail.com',
+        password: passwordHash('demoadmin7'),
+        email: 'demoadmin7@gmail.com',
         roleId: 12,
         id: 117,
         createdAt: new Date(),
@@ -174,8 +182,8 @@ const users = [
     {
         firstName: 'John',
         lastName: 'Doe',
-        password: 'demo18',
-        email: 'demo18@gmail.com',
+        password: passwordHash('demoadmin8'),
+        email: 'demoadmin8@gmail.com',
         roleId: 12,
         id: 118,
         createdAt: new Date(),
@@ -184,8 +192,8 @@ const users = [
     {
         firstName: 'John',
         lastName: 'Doe',
-        password: 'demo19',
-        email: 'demo19@gmail.com',
+        password: passwordHash('demoadmin9'),
+        email: 'demoadmin9@gmail.com',
         roleId: 12,
         id: 119,
         createdAt: new Date(),
@@ -194,8 +202,8 @@ const users = [
     {
         firstName: 'John',
         lastName: 'Doe',
-        password: 'demo20',
-        email: 'demo20@gmail.com',
+        password: passwordHash('demoadmin10'),
+        email: 'demoadmin10@gmail.com',
         roleId: 12,
         id: 120,
         createdAt: new Date(),
