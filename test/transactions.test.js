@@ -4,17 +4,32 @@ const API = supertest(app)
 const { cleanDB } = require('./utils/truncate')
 const factory = require('./utils/factories')
 
+let transactions
+
 beforeEach(async () => {
 	await cleanDB
-	const transactions = await factory.transctionsFactory(2)
-	console.log(transactions)
+	transactions = await factory.transctionsFactory(2)
 })
 
 describe('get transaction', () => {
-	test('when ask for all transactions receive an array', async () => {})
-	test('when ask for all transactions receive the total of transactions', async () => {})
-	test('when ask for one existing transaction receive that transaction', async () => {})
-	test('when ask for one non-existent transaction receive that error', async () => {})
+	test('when ask for all transactions receive an array', async () => {
+		const response = await API.get('/transactions').expect(200)
+		expect(Array.isArray(response.body.body)).toBe(true)
+	})
+	test('when ask for all transactions receive the total of transactions', async () => {
+		const response = await API.get('/transactions').expect(200)
+		expect(response.body.body).toHaveLength(transactions.length)
+	})
+	test('when ask for one existing transaction receive that transaction', async () => {
+		const response = await API.get(`/transactions/${transactions[0].id}`).expect(200)
+		const body = response.body.body
+		expect(body.id).toBe(transactions[0].id)
+		expect(body.amount).toBe(transactions[0].amount)
+	})
+	test('when ask for one non-existent transaction receive that error', async () => {
+		const response = await API.get(`/transactions/-22`).expect(404)
+		expect(response.type).toBe('text/html')
+	})
 })
 
 describe('creating a transaction', () => {
