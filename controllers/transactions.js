@@ -1,5 +1,5 @@
 const createHttpError = require('http-errors')
-const { Transaction } = require('../database/models')
+const { Transaction,User,Category } = require('../database/models')
 const { endpointResponse } = require('../helpers/success')
 const { catchAsync } = require('../helpers/catchAsync')
 
@@ -7,7 +7,22 @@ const { catchAsync } = require('../helpers/catchAsync')
 module.exports = {
   get: catchAsync(async (req, res, next) => {
     try {
-      const response = await Transaction.findAll();
+      const response = await Transaction.findAll({
+        attributes: {          
+        exclude: [
+                  "deletedAt",
+                  "userId",
+                  "categoryId","updatedAt"
+                ],
+              }, 
+        include:
+          [{
+            model: User, attributes:["firstName"]
+          },
+          
+          { model: Category, attributes: ['name'] }
+          ]
+      });
       if(!response.length) return next(createHttpError(404, 'There are no transactions'))
       endpointResponse({
         res,
@@ -26,7 +41,24 @@ module.exports = {
   getById: catchAsync(async (req, res, next) => {
     const {id} = req.params
     try {
-      const response = await Transaction.findByPk(id)
+      const response = await Transaction.findOne({
+        where: { id: id },
+           attributes: {          
+        exclude: [
+                  "deletedAt",
+                  "userId",
+                  "categoryId","updatedAt"
+                ],
+              }, 
+        include:
+          [{
+            model: User, attributes:["firstName"]
+          },
+          
+          { model: Category, attributes: ['name'] }
+          ]
+      
+      })
       if(!response) return next(createHttpError(404, 'Transaction not found'));
       endpointResponse({
         res,
