@@ -151,4 +151,22 @@ module.exports = {
             next(httpError);
         }
     }),
+    getByUserId: catchAsync(async (req, res, next) => {
+        const { id } = req.params;
+        try {
+            const transactions = await Transaction.findAll({
+                where: { userId: id },
+            });
+            endpointResponse({
+                res,
+                body: transactions,
+            });
+        } catch (error) {
+            const httpError = createHttpError(
+                error.statusCode,
+                `[Error deleting Transaction] - [index - DELETE]: ${error.message}`
+            );
+            next(httpError);
+        }
+    }),
 };
