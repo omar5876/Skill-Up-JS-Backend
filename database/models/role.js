@@ -15,9 +15,6 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: DataTypes.STRING,
       description: DataTypes.STRING,
-      deletedAt: {
-        type: DataTypes.STRING,
-      },
     },
     {
       sequelize,
