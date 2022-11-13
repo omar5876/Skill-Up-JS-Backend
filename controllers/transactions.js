@@ -91,6 +91,8 @@ module.exports = {
     }
   }),
 
+
+      
   updateTransaction: catchAsync(async (req, res, next) => {
     let transactionFound;
     try {
@@ -119,6 +121,7 @@ module.exports = {
       next(httpError);
     }
   }),
+
 
   deleteTransaction: catchAsync(async (req, res, next) => {
     let transactionFound;
@@ -153,6 +156,7 @@ module.exports = {
     try {
       const transactions = await Transaction.findAll({
         where: { userId: id },
+         order: [['createdAt', 'DESC']],
       });
       endpointResponse({
         res,
@@ -220,7 +224,6 @@ module.exports = {
         return outcomes.toString();
       });
       const balance = incomes - outcomes;
-
       endpointResponse({
         res,
         message: "Transaction retrieved successfully",
@@ -234,4 +237,5 @@ module.exports = {
       next(httpError);
     }
   }),
+
 };

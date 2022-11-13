@@ -20,4 +20,5 @@ router.post("/", isAuthenticated, hasOwnershipRol, createTransaction);
 router.put("/:id", isAuthenticated, hasOwnershipRol, updateTransaction);
 router.delete("/:id", isAuthenticated, hasOwnershipRol, deleteTransaction);
 
+
 module.exports = router;
