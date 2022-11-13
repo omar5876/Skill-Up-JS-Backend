@@ -9,7 +9,7 @@ module.exports = {
     try {
       const response = await Transaction.findAll({
         attributes: {
-          exclude: ["deletedAt", "userId", "categoryId", "updatedAt"],
+          exclude: ["deletedAt", "updatedAt"],
         },
         include: [
           {
