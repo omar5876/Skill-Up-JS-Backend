@@ -19,6 +19,7 @@ module.exports = {
 
                     { model: Category, attributes: ['name'] },
                 ],
+                order: [['createdAt', 'DESC']],
             });
             if (!response.length)
                 return next(createHttpError(404, 'There are no transactions'));
@@ -156,6 +157,7 @@ module.exports = {
         try {
             const transactions = await Transaction.findAll({
                 where: { userId: id },
+                order: [['createdAt', 'DESC']],
             });
             endpointResponse({
                 res,
