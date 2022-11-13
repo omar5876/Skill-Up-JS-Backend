@@ -26,7 +26,6 @@ module.exports = {
             if (!match) {
                 throw new createHttpError(401, 'Email or password invalid');
             }
-            console.log(user.toJSON());
             const accessToken = createToken(user);
 
             endpointResponse({
@@ -37,6 +36,8 @@ module.exports = {
                         lastName: user.lastName,
                         id: user.id,
                         role: user.Role.name,
+                        avatar: user.avatar,
+                        email: user.email,
                         // role: {
                         //   roleName: user.Role.name,
                         //   roleId: user.Role.id
@@ -92,6 +93,8 @@ module.exports = {
                         lastName: user.lastName,
                         id: user.id,
                         role: user.Role.name,
+                        avatar: user.avatar,
+                        email: user.email,
                         // role: {
                         //   roleName: user.Role.name,
                         //   roleId: user.Role.id
