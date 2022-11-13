@@ -3,7 +3,6 @@ const { Transaction, User, Category } = require("../database/models");
 const { endpointResponse } = require("../helpers/success");
 const { catchAsync } = require("../helpers/catchAsync");
 const sequelize = require("sequelize");
-const { where } = require("sequelize");
 // example of a controller. First call the service, then build the controller method
 module.exports = {
   get: catchAsync(async (req, res, next) => {
@@ -71,6 +70,10 @@ module.exports = {
 
   createTransaction: catchAsync(async (req, res, next) => {
     try {
+      const { userId } = req.user;
+      const { body } = req;
+      body.userId = userId;
+      console.log(body);
       const response = await Transaction.create(req.body);
       if (!response)
         return next(createHttpError(500, "Transaction hasn't been created"));
@@ -145,7 +148,24 @@ module.exports = {
       next(httpError);
     }
   }),
-
+  getByUserId: catchAsync(async (req, res, next) => {
+    const { id } = req.params;
+    try {
+      const transactions = await Transaction.findAll({
+        where: { userId: id },
+      });
+      endpointResponse({
+        res,
+        body: transactions,
+      });
+    } catch (error) {
+      const httpError = createHttpError(
+        error.statusCode,
+        `[Error deleting Transaction] - [index - DELETE]: ${error.message}`
+      );
+      next(httpError);
+    }
+  }),
   balanceByUser: catchAsync(async (req, res, next) => {
     const { id } = req.params;
     const errorIdUser = await Transaction.findByPk(id);
