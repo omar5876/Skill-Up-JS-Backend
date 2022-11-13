@@ -224,7 +224,7 @@ module.exports = {
       endpointResponse({
         res,
         message: "Transaction retrieved successfully",
-        body: { balance: balance },
+        body: { balance: balance, outcomesData, incomesData },
       });
     } catch (error) {
       const httpError = createHttpError(
