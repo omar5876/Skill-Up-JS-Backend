@@ -16,13 +16,13 @@ module.exports = {
       endpointResponse({
         res,
         code: 201,
-        message: "Category created successfully",
+        message: "Categoria creada con exito",
         body: response,
       });
     } catch {
       const httpError = createHttpError(
         error.statusCode,
-        `[Error to insert category] - [${req.path} - POST]: ${error.message}`
+        `[Error al crear la categoria] - [${req.path} - POST]: ${error.message}`
       );
       next(httpError);
     }
@@ -33,13 +33,13 @@ module.exports = {
       const response = await Category.findAll();
       endpointResponse({
         res,
-        message: "Categories retrieved successfuly",
+        message: "Categorias encontradas con exito",
         body: response,
       });
     } catch (error) {
       const httpError = createHttpError(
         error.statusCode,
-        `[Error to insert category] - [${req.path} - POST]: ${error.message}`
+        `[Error al obtener categoria] - [${req.path} - GET]: ${error.message}`
       );
       next(httpError);
     }
@@ -50,18 +50,18 @@ module.exports = {
     try {
       const category = await Category.findByPk(id);
       if (!category) {
-        const httpError = createHttpError(404, "category does not exist");
+        const httpError = createHttpError(404, "Esta categoria no existe");
         return next(httpError);
       }
       category.destroy();
       endpointResponse({
         res,
-        message: "Category deleted",
+        message: "Categoria borrada con exito",
       });
     } catch (error) {
       const httpError = createHttpError(
         error.statusCode,
-        `[Error deleting user] - [index - DELETE]: ${error.message}`
+        `[Error al borrar] - [index - DELETE]: ${error.message}`
       );
       next(httpError);
     }
@@ -74,7 +74,7 @@ module.exports = {
     const category = await Category.findByPk(id);
 
     if (!category) {
-      const httpError = createHttpError(404, "The category was not found.");
+      const httpError = createHttpError(404, "The categoria no existe");
       return next(httpError);
     }
     category.name = name;
@@ -84,7 +84,7 @@ module.exports = {
       .then((updatedCategory) =>
         endpointResponse({
           res,
-          message: "Category updated successfully",
+          message: "Category  actualizada con exito",
           body: response,
           options: { category: { ...updatedCategory } },
         })
@@ -92,7 +92,7 @@ module.exports = {
       .catch((err) => {
         const httpError = createHttpError(
           err.statusCode,
-          `[Error updating Categories] - [index - PUT]: ${err.message}`
+          `[Error al actualizar categorias - [index - PUT]: ${err.message}`
         );
         next(httpError);
       });
@@ -105,16 +105,16 @@ module.exports = {
       if (!response)
         return res
           .status(404)
-          .json({ status: 404, message: "Category not found" });
+          .json({ status: 404, message: "esta categoria no existe" });
       endpointResponse({
         res,
-        message: "Category retrieved successfully",
+        message: "Category encontrada",
         body: response,
       });
     } catch (error) {
       const httpError = createHttpError(
         error.statusCode,
-        `[Error retrieving Category] - [index - GET]: ${error.message}`
+        `[Error al encontrar categoria] - [index - GET]: ${error.message}`
       );
       next(httpError);
     }

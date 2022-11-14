@@ -21,16 +21,16 @@ module.exports = {
         ],
       });
       if (!response.length)
-        return next(createHttpError(404, "There are no transactions"));
+        return next(createHttpError(404, "No existen transacciones"));
       endpointResponse({
         res,
-        message: "Transactions retrieved successfully",
+        message: "Transacciónes recuperadas con éxito",
         body: response,
       });
     } catch (error) {
       const httpError = createHttpError(
         error.statusCode,
-        `[Error retrieving Transactions] - [index - GET]: ${error.message}`
+        `[No existen transacciones] - [index - GET]: ${error.message}`
       );
       next(httpError);
     }
@@ -53,16 +53,17 @@ module.exports = {
           { model: Category, attributes: ["name"] },
         ],
       });
-      if (!response) return next(createHttpError(404, "Transaction not found"));
+      if (!response)
+        return next(createHttpError(404, "No existe esta transferencia"));
       endpointResponse({
         res,
-        message: "Transaction retrieved successfully",
+        message: "Transacciónes recuperadas con éxito",
         body: response,
       });
     } catch (error) {
       const httpError = createHttpError(
         error.statusCode,
-        `[Error retrieving Transaction] - [index - GET]: ${error.message}`
+        `[Error al recuperar transacciones] - [index - GET]: ${error.message}`
       );
       next(httpError);
     }
@@ -76,33 +77,31 @@ module.exports = {
       console.log(body);
       const response = await Transaction.create(req.body);
       if (!response)
-        return next(createHttpError(500, "Transaction hasn't been created"));
+        return next(createHttpError(500, "No se ha creado la transacción"));
       endpointResponse({
         res,
-        message: "Transaction was created successfully",
+        message: "La transacción fue creada con éxito",
         body: response,
       });
     } catch (error) {
       const httpError = createHttpError(
         error.statusCode,
-        `[Error creating Transaction] - [index - POST]: ${error.message}`
+        `[Error al crear] - [index - POST]: ${error.message}`
       );
       next(httpError);
     }
   }),
 
-
-      
   updateTransaction: catchAsync(async (req, res, next) => {
     let transactionFound;
     try {
       transactionFound = await Transaction.findByPk(req.params.id);
       if (!transactionFound)
-        return next(createHttpError(404, "Transaction not found"));
+        return next(createHttpError(404, "Error al encontrar transacciones"));
     } catch (error) {
       const httpError = createHttpError(
         error.statusCode,
-        `[Error finding Transaction] - [index - PUT]: ${error.message}`
+        `[Error al encontrar la transacción] - [index - PUT]: ${error.message}`
       );
       next(httpError);
     }
@@ -110,29 +109,28 @@ module.exports = {
       const response = await transactionFound.update(req.body);
       endpointResponse({
         res,
-        message: "Transaction was updated successfully",
+        message: "La transacción se actualizó con éxito",
         body: response,
       });
     } catch (error) {
       const httpError = createHttpError(
         error.statusCode,
-        `[Error updating Transaction] - [index - PUT]: ${error.message}`
+        `[Error al actualizar la transacción] - [index - PUT]: ${error.message}`
       );
       next(httpError);
     }
   }),
-
 
   deleteTransaction: catchAsync(async (req, res, next) => {
     let transactionFound;
     try {
       transactionFound = await Transaction.findByPk(req.params.id);
       if (!transactionFound)
-        return next(createHttpError(404, "Transaction not found"));
+        return next(createHttpError(404, "Transacción no encontrada"));
     } catch (error) {
       const httpError = createHttpError(
         error.statusCode,
-        `[Error finding Transaction] - [index - DELETE]: ${error.message}`
+        `[Error al encontrar la transacción] - [index - DELETE]: ${error.message}`
       );
       next(httpError);
     }
@@ -156,7 +154,7 @@ module.exports = {
     try {
       const transactions = await Transaction.findAll({
         where: { userId: id },
-         order: [['createdAt', 'DESC']],
+        order: [["createdAt", "DESC"]],
       });
       endpointResponse({
         res,
@@ -165,7 +163,7 @@ module.exports = {
     } catch (error) {
       const httpError = createHttpError(
         error.statusCode,
-        `[Error deleting Transaction] - [index - DELETE]: ${error.message}`
+        `[Error al eliminar la transacción] - [index - DELETE]: ${error.message}`
       );
       next(httpError);
     }
@@ -173,7 +171,8 @@ module.exports = {
   balanceByUser: catchAsync(async (req, res, next) => {
     const { id } = req.params;
     const errorIdUser = await Transaction.findByPk(id);
-    if (!errorIdUser) return next(createHttpError(404, "user no existe"));
+    if (!errorIdUser)
+      return next(createHttpError(404, "Este usuario no existe"));
 
     try {
       const outcomesData = await Transaction.findAll({
@@ -226,16 +225,15 @@ module.exports = {
       const balance = incomes - outcomes;
       endpointResponse({
         res,
-        message: "Transaction retrieved successfully",
+        message: "Este es tu balance actulizado",
         body: { balance: balance, outcomesData, incomesData },
       });
     } catch (error) {
       const httpError = createHttpError(
         error.statusCode,
-        `[Error retrieving Transaction] - [index - GET]: ${error.message}`
+        `[Error al recuperar la transacción] - [index - GET]: ${error.message}`
       );
       next(httpError);
     }
   }),
-
 };

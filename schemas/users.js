@@ -1,46 +1,47 @@
 const userSchema = {
   firstName: {
-    in: 'body',
+    in: "body",
     trim: true,
     isAlpha: {
-      errorMessage: 'Firstname may only contain alpha characters.'
+      errorMessage: "El nombre solo puede contener caracteres alfabéticos.",
     },
   },
   lastName: {
-    in: 'body',
+    in: "body",
     trim: true,
     isAlpha: {
-      errorMessage: 'Lastname may only contain alpha characters.'
+      errorMessage: "El nombre solo puede contener caracteres alfabéticos.",
     },
   },
   email: {
-    in: 'body',
+    in: "body",
     trim: true,
     normalizeEmail: true,
     isEmail: {
-      errorMessage: 'Email is invalid'
+      errorMessage: "el correo electrónico es invalido",
     },
   },
   password: {
-    in: 'body',
+    in: "body",
     isStrongPassword: {
       options: {
-
         minLength: 8,
         minLowercase: 1,
         minUppercase: 0,
         minNumbers: 1,
         minSymbols: 0,
       },
-      errorMessage: 'Password is invalid, make sure it\'s at least 8 characters including a number and a lowercase letter.'
+      errorMessage:
+        "La contraseña no es válida, asegúrese de que tenga al menos 8 caracteres, incluido un número y una letra minúscula.",
     },
     isLength: {
       options: { max: 72 },
-      errorMessage: 'Password is too long, make sure it\'s no more than 72 characters.'
-    }
+      errorMessage:
+        "La contraseña es demasiado larga, asegúrese de que no tenga más de 72 caracteres.",
+    },
   },
-}
+};
 
 module.exports = {
-  userSchema
-}
+  userSchema,
+};
